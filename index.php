@@ -7,7 +7,7 @@
     <body>
         <h1></h1>
         <ul>
-            <li><a href="slider/">Slider</a>: Simple slider in JQuery.  Can be changed easily</li>
+            <li><a href="slider/">Slider</a>: Simple slider in JQuery.</li>
         </ul>
     </body>
 </html>
