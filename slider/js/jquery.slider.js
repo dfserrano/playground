@@ -1,3 +1,8 @@
+/**
+ * Creates an image slider, mainly by conventions.
+ * array    options     interval: (Number) Time in milliseconds to change between images (minimum 500).
+ *                      numbers: (Boolean) True if the pages appear as numbers.
+ */
 var Slider = function(containerSelector, opt) {
     this.context = $(containerSelector);
     this.options = {interval: 2000, numbers: true};
@@ -6,7 +11,9 @@ var Slider = function(containerSelector, opt) {
     
     if(opt !== undefined) {
         if (opt['interval'] !== undefined) {
-            this.options['interval'] = opt['interval'];
+            if (opt['interval'] > 500) {
+                this.options['interval'] = opt['interval'];
+            }
         }
         
         if (opt['numbers'] !== undefined) {
@@ -45,7 +52,6 @@ Slider.fn.changePage = function(index){
  * Changes image in the slider, by animating the reel
  */
 Slider.fn.slide = function(index, context){
-    console.log('Rotates '+this.context.attr('id'));
     var left = $('.piece:eq('+(index-1)+')', this.context).position().left;
 
     $('.reel', this.context).stop(true,true).animate({
@@ -72,14 +78,12 @@ Slider.fn.rotate = function(context){
  * Starts the slider
  */
 Slider.fn.start = function(){
-    console.log('Start Slider');
-    
     // store reference to the slider object
     var self = this;
 
     var reelWidth = 0;
 
-    // Change width of reel
+    // Adjust width of reel
     $('.reel > .piece', this.context).each(function() {
         reelWidth += $(this).width();
     });
@@ -88,8 +92,7 @@ Slider.fn.start = function(){
 
     // Number of Pieces
     this.numPieces = this.getNumPieces(this.context);
-    console.log('size '+this.numPieces);
-
+    
     // Gets pages div
     var pagesContainer = $('.pages', this.context);
 
@@ -117,13 +120,11 @@ Slider.fn.start = function(){
     
     // Sets interval for rotation
     function doRotate() {
-        console.log("Resume");
         self.play = setInterval(function() { self.rotate(self); }, self.options['interval']); 
     }
     
     // Removes rotation interval
     function stopRotate() {
-        console.log("Stop");
         clearInterval(self.play);
     }
     
@@ -139,7 +140,7 @@ Slider.fn.start = function(){
         doRotate();
     });
 
-    // On Hover
+    // On Hover, stop rotation
     $(".window", this.context).hover(function() {
         stopRotate();
     }, function() {
@@ -148,6 +149,12 @@ Slider.fn.start = function(){
 
     
     // Start up Animation
-    console.log('Start Animation Slider');
     doRotate();
 };
+
+
+// Add as JQuery plugin
+$.fn.startSlider = function(options) {
+    var slider = new Slider($(this), options);
+    slider.start();
+}

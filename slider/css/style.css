@@ -16,6 +16,7 @@
 }
 
 .page {
+    cursor: pointer;
     float:left;
     margin-right: 3px;
 }
