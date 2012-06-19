@@ -1,5 +1,4 @@
 <?php
-
 require_once dirname(__FILE__) . '/../../Graph.php';
 
 class Pagerank {
@@ -18,7 +17,7 @@ class Pagerank {
      * 
      * @param graph The data structure containing the Web linkage graph
      */
-    public function __construct($graph) {
+    public function __construct(&$graph) {
         if (!$graph instanceof Graph) {
             //Exception
         }
@@ -94,6 +93,8 @@ class Pagerank {
         $iter = ((int) abs(log($n) / log(10))) + 1;
         $iter = ($iter < 10)? 10 : $iter;
         $this->computePagerank($iter);
+        
+        return $this->scores;
     }
 
     /**
@@ -124,7 +125,7 @@ class Pagerank {
         //TO-DO: Hacer converger con un epsilon
         while (($iter--) > 0) {
             $newScore = array();
-
+            
             foreach ($ids as $i) {
                 $inlinks = $this->graph->inLinksById($i);
                 $weight2 = 0;
